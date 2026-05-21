@@ -1,6 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+const authRoutes = require('./routes/authRoutes');
+const postRoutes = require('./routes/postRoutes');
+
+app.use('/api/auth', authRoutes);
+app.use('/api/posts', postRoutes);
+
 const cors = require('cors');
 
 require('dotenv').config();
@@ -23,5 +29,3 @@ app.listen(PORT, () => {
     console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
 
-const authRoutes = require('./routes/authRoutes');
-app.use('/api/auth', authRoutes);
