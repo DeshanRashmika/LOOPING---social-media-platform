@@ -19,6 +19,24 @@ const userSchema = new mongoose.Schema({
         type: String, 
         default: "" 
     },
+    avatar: {
+        type: String,
+        default: ""
+    },
+    isPrivate: {
+        type: Boolean,
+        default: false
+    },
+    showEmail: {
+        type: Boolean,
+        default: false
+    },
+    refreshTokens: [
+        {
+            token: { type: String },
+            createdAt: { type: Date, default: Date.now }
+        }
+    ],
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 }, { timestamps: true });
