@@ -33,3 +33,45 @@ exports.getAllPosts = async (req, res) => {
         res.status(500).json({ message: "Server Error", error: error.message });
     }
 };
+exports.likePost = async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+        if (!post) {
+            return res.status(404).json({ message: "Post not found!" });
+        }
+
+        if (post.likes.includes(req.user.id)) {
+            post.likes = post.likes.filter(id => id.toString() !== req.user.id);
+            await post.save();
+            return res.status(200).json({ message: "Post unlike successful", likesCount: post.likes.length });
+        } else {
+            post.likes.push(req.user.id);
+            await post.save();
+            return res.status(200).json({ message: "Post liked successfully", likesCount: post.likes.length });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+};
+
+exports.addComment = async (req, res) => {
+    try {
+        const { text } = req.body;
+        const postId = req.params.id;
+
+        if (!text) {
+            return res.status(400).json({ message: "Comment cannot be empty!" });
+        }
+
+        const newComment = new Comment({
+            postId,
+            userId: req.user.id,
+            text
+        });
+
+        await newComment.save();
+        res.status(201).json({ message: "Comment added successfully", comment: newComment });
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+};
